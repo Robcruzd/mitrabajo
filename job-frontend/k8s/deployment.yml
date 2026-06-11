@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-frontend
+  namespace: talentocolombia
+  labels:
+    app: job-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-frontend
+  template:
+    metadata:
+      labels:
+        app: job-frontend
+    spec:
+      containers:
+        - name: job-frontend
+          image: job-frontend:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
