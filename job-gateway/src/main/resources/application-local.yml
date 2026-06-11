@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: job-gateway
+  graphql:
+    graphiql:
+      enabled: true
+  grpc:
+    client:
+      orchestration:
+        address: static://localhost:9091
+        negotiationType: plaintext
+
+gprc:
+  host: localhost
+
+server:
+  port: 8085
+
+logging:
+  level:
+    org:
+      springframework:
+        graphql: DEBUG

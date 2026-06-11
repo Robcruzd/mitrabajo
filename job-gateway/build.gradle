@@ -1,0 +1,86 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.google.protobuf' version '0.9.5'
+}
+
+group = 'com.talentocolombia.gateway'
+version = '0.0.1-SNAPSHOT'
+description = 'Backend for Frontend (BFF) con GraphQL para Talento Colombia.'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+protobuf {
+	protoc {
+		// La versión del compilador Protobuf
+		artifact = "com.google.protobuf:protoc" // Coincide con la versión del JobScraperService
+	}
+	plugins {
+		grpc {
+			// La versión del plugin gRPC para Java
+			artifact = "io.grpc:protoc-gen-grpc-java" // Coincide con la versión del JobScraperService
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {
+				option 'jakarta_omit'
+				option '@generated=omit'
+			}
+		}
+	}
+}
+
+ext {
+	set('springGrpcVersion', "0.8.0")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-graphql'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+	// Dependencias gRPC (cliente)
+	implementation 'org.springframework.grpc:spring-grpc-client-spring-boot-starter' // O la última compatible con SB 3.5.0
+	implementation 'io.grpc:grpc-netty-shaded:1.73.0' // La implementación de Netty para gRPC (versión de gRPC)
+	implementation 'io.grpc:grpc-protobuf:1.73.0'
+	implementation 'io.grpc:grpc-stub:1.73.0'
+	compileOnly 'com.google.protobuf:protobuf-java-util:4.31.1' // Para utilidades de Protobuf (Timestamp, etc.)
+
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.springframework.graphql:spring-graphql-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.grpc:spring-grpc-dependencies:${springGrpcVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

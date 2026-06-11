@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: job-scraper-service
+  data:
+    mongodb:
+      uri: mongodb://talentouser:talentopass@localhost:27017/tc_mongodb_offers?authSource=admin
+
+server:
+  port: 8082
+
+grpc:
+  server:
+    port: 9090
+    # address: 127.0.0.1
+    enable-reflection: true # Habilita la reflexión para herramientas como gRPCurl/grpci
+
+logging:
+  level:
+    root: INFO
+    com.talentocolombia.jobs.scraper: DEBUG # Ajusta para ver más logs de tu código

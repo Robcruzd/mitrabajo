@@ -1,0 +1,44 @@
+type JobOffer {
+  jobId: ID!
+  title: String!
+  company: String
+  location: String
+  experienceLevel: String
+  score: Float
+  url: String
+}
+
+type CandidateMatch {
+  candidateId: ID!
+  name: String!
+  score: Float!
+  matchedSkills: [String!]!
+}
+
+type Query {
+
+  jobMatchesForCandidate(
+    candidateId: ID!
+    page: Int = 0
+    size: Int = 10
+  ): [JobOffer!]!
+
+  jobsByKeyword(
+    keyword: String!
+    page: Int = 0
+    size: Int = 10
+  ): [JobOffer!]!
+
+  jobsByKeywordAndLocation(
+    keyword: String!
+    location: String!
+    page: Int = 0
+    size: Int = 10
+  ): [JobOffer!]!
+
+  candidatesForJob(
+    jobId: ID!
+    page: Int = 0
+    size: Int = 10
+  ): [CandidateMatch!]!
+}

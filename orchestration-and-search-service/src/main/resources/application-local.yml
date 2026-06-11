@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: orchestration-and-search-service
+  grpc:
+    client:
+      jobScraperChannel:
+        address: static://localhost:9090
+        negotiationType: plaintext
+    server:
+      port: 9091
+      # address: 127.0.0.1
+
+server:
+  port: 8084
+
+grpc:
+  host: localhost
+
+candidate-profile-service:
+  url: localhost:8083
+
+logging:
+  level:
+    root: INFO
+    com:
+      talentocolombia:
+        orchestration:
+          search: DEBUG
+    io:
+      grpc: WARN

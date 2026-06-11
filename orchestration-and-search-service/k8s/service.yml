@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orchestration-and-search
+spec:
+  selector:
+    app: orchestration-and-search
+  ports:
+    - port: 9091
+      targetPort: 9091
+  type: ClusterIP

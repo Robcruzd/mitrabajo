@@ -1,0 +1,79 @@
+-- Tabla candidates (Representa el perfil principal del candidato)
+CREATE TABLE candidates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(), -- O BIGINT SERIAL si prefieres IDs numéricos
+    user_id UUID UNIQUE, -- Podría ser un FK a una tabla 'users' si manejas un servicio de autenticación separado
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(20),
+    current_city VARCHAR(100) NOT NULL,
+    current_department VARCHAR(100) NOT NULL,
+    current_country VARCHAR(50) NOT NULL DEFAULT 'Colombia',
+    profile_picture_url TEXT,
+    linkedin_url TEXT,
+    portfolio_url TEXT,
+    profile_visibility VARCHAR(50) NOT NULL DEFAULT 'PUBLIC', -- Ej: 'PUBLIC', 'PRIVATE', 'VISIBLE_TO_EMPLOYERS'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Índices recomendados
+CREATE INDEX idx_candidates_email ON candidates (email);
+CREATE INDEX idx_candidates_location ON candidates (current_city, current_department);
+
+
+-- Tabla candidate_desired_roles (Roles de empleo que el candidato busca)
+CREATE TABLE candidate_desired_roles (
+    candidate_id UUID NOT NULL,
+    role_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (candidate_id, role_name), -- Clave compuesta para asegurar unicidad
+    FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE
+);
+
+-- Índice recomendado
+CREATE INDEX idx_cand_desired_roles_role_name ON candidate_desired_roles (role_name);
+
+-- Tabla candidate_skills (Habilidades específicas del candidato)
+CREATE TABLE candidate_skills (
+    candidate_id UUID NOT NULL,
+    skill_name VARCHAR(100) NOT NULL,
+    skill_level VARCHAR(50), -- Opcional: 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'
+    PRIMARY KEY (candidate_id, skill_name),
+    FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE
+);
+
+-- Índice recomendado
+CREATE INDEX idx_cand_skills_skill_name ON candidate_skills (skill_name);
+
+-- Tabla candidate_experience (Historial laboral del candidato)
+CREATE TABLE candidate_experience (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    candidate_id UUID NOT NULL,
+    job_title VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255) NOT NULL,
+    location VARCHAR(255),
+    start_date DATE NOT NULL,
+    end_date DATE, -- Puede ser NULL para el empleo actual
+    is_current_job BOOLEAN DEFAULT FALSE,
+    description TEXT,
+    FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE
+);
+
+-- Índice recomendado
+CREATE INDEX idx_cand_experience_candidate_id ON candidate_experience (candidate_id);
+
+-- Tabla candidate_education (Formación académica del candidato)
+CREATE TABLE candidate_education (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    candidate_id UUID NOT NULL,
+    degree VARCHAR(255) NOT NULL,
+    major VARCHAR(255),
+    institution_name VARCHAR(255) NOT NULL,
+    location VARCHAR(255),
+    start_date DATE NOT NULL,
+    end_date DATE, -- Puede ser NULL si aún está estudiando
+    FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE
+);
+
+-- Índice recomendado
+CREATE INDEX idx_cand_education_candidate_id ON candidate_education (candidate_id);

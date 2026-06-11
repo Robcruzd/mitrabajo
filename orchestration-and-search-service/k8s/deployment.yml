@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestration-and-search
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orchestration-and-search
+  template:
+    metadata:
+      labels:
+        app: orchestration-and-search
+    spec:
+      containers:
+        - name: orchestration-and-search
+          image: orchestration-and-search:1.0
+          ports:
+            - containerPort: 9091
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

@@ -1,0 +1,60 @@
+{
+  "_id": "60c72b2f9f1b2c001c8e4d5e", // MongoDB ObjectId (UUID es una alternativa si lo prefieres generar en la app)
+  "externalId": "123456789",          // ID de la oferta en la plataforma original (si aplica)
+  "sourcePlatform": "Computrabajo",  // Nombre de la plataforma de donde se obtuvo la oferta
+  "url": "https://www.computrabajo.com.co/oferta-de-empleo/123456789", // URL original para redirigir
+  "title": "Desarrollador Java Senior",
+  "companyName": "TechSolutions S.A.S.",
+  "companyLogoUrl": "https://example.com/techsolutions_logo.png",
+  "location": {
+    "city": "Bogotá D.C.",
+    "department": "Bogotá",
+    "country": "Colombia"
+  },
+  "description": "Buscamos un desarrollador Java Senior con experiencia en Spring Boot...", // Descripción completa
+  "salaryRange": {
+    "min": 4000000, // Opcional: puedes almacenar min y max numérico para facilitar filtros
+    "max": 6000000,
+    "currency": "COP",
+    "text": "$4M - $6M COP" // Representación textual del salario
+  },
+  "employmentType": "Full-time", // Ej: Full-time, Part-time, Contract, Freelance
+  "experienceLevel": "Senior",    // Ej: Junior, Mid, Senior, Estudiante, Trainee
+  "publicationDate": "2025-06-18T10:00:00Z", // Fecha de publicación original (ISO 8601)
+  "expirationDate": "2025-07-18T23:59:59Z", // Fecha de expiración (opcional)
+  "applicationDeadline": null,           // Fecha límite para aplicar (si difiere de expirationDate)
+  "requiredSkills": [ // Array de strings, facilita la indexación y búsqueda
+    "Java",
+    "Spring Boot",
+    "REST",
+    "Microservicios",
+    "SQL",
+    "Kafka"
+  ],
+  "benefits": [ // Array de strings para beneficios (flexible)
+    "Seguro de salud",
+    "Días flexibles",
+    "Bono anual"
+  ],
+  "contactInfo": { // Información de contacto, si se extrae
+    "email": "hr@techsolutions.com",
+    "phone": null
+  },
+  "crawledAt": "2025-06-18T18:30:00Z", // Fecha y hora en que tu scraper obtuvo esta oferta
+  "isActive": true,                    // Indica si la oferta está activa
+  "jobFunctions": [ // Funciones laborales (ej. Desarrollo de Software, Gestión de Proyectos)
+    "Software Development",
+    "Engineering"
+  ]
+}
+
+Índices recomendados para MongoDB (db.collection.createIndex()):
+
+db.job_offers.createIndex({ "sourcePlatform": 1, "externalId": 1 }, { unique: true }) - Para evitar duplicados de ofertas crawleadas.
+db.job_offers.createIndex({ "title": "text", "description": "text", "requiredSkills": "text" }) - Para búsqueda de texto completo.
+db.job_offers.createIndex({ "location.city": 1, "location.department": 1 }) - Para búsqueda por ubicación.
+db.job_offers.createIndex({ "publicationDate": -1 }) - Para ordenar por las ofertas más recientes.
+db.job_offers.createIndex({ "companyName": 1 })
+db.job_offers.createIndex({ "employmentType": 1 })
+db.job_offers.createIndex({ "experienceLevel": 1 })
+db.job_offers.createIndex({ "requiredSkills": 1 }) - Para búsquedas exactas o parciales en arrays.

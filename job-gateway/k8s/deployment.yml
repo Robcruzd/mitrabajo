@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-gateway
+  template:
+    metadata:
+      labels:
+        app: job-gateway
+    spec:
+      containers:
+        - name: job-gateway
+          image: job-gateway:1.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ORCHESTRATION_HOST
+              value: orchestration-search
+            - name: CANDIDATE_HOST
+              value: candidate-profile

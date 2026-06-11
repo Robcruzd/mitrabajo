@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package com.talentocolombia.jobs.scraper;
+
+option java_multiple_files = true;
+option java_package = "com.talentocolombia.jobs.scraper.grpc";
+option java_outer_classname = "JobScraperServiceProto";
+
+import "google/protobuf/timestamp.proto";
+
+service JobScraperService {
+  rpc GetJobOffers(JobOffersRequest) returns (JobOffersResponse);
+  rpc GetJobOfferById(GetJobOfferByIdRequest) returns (JobOffer);
+  rpc TriggerScrape(TriggerScrapeRequest) returns (TriggerScrapeResponse);
+}
+
+message JobOffersRequest {
+  string query = 1;
+  string location = 2;
+  repeated string requiredSkills = 3;
+  string employmentType = 4;
+  string experienceLevel = 5;
+  int32 page = 6;
+  int32 size = 7;
+  google.protobuf.Timestamp minPublicationDate = 8;
+}
+
+message JobOffersResponse {
+  repeated JobOffer jobOffers = 1;
+  int64 totalResults = 2;
+  int32 currentPage = 3;
+  int32 pageSize = 4;
+  int32 totalPages = 5;
+}
+
+message GetJobOfferByIdRequest {
+  string id = 1;
+}
+
+message TriggerScrapeRequest {
+  string platformName = 1; // The name of the platform to scrape (e.g., "Computrabajo")
+  bool fullRescrape = 2; // If true, rescrape all, else only new/updated (for future use)
+  string query = 3;      // Nuevo: Término de búsqueda para el scraping
+  string location = 4;   // Nuevo: Ubicación para el scraping
+  int32 maxPages = 5;    // Nuevo: Número máximo de páginas a scrapear
+}
+
+message TriggerScrapeResponse {
+  bool success = 1;
+  string message = 2;
+  int32 offersFound = 3;
+}
+
+message JobOffer {
+  string id = 1;
+  string externalId = 2;
+  string sourcePlatform = 3;
+  string url = 4;
+  string title = 5;
+  string companyName = 6;
+  string companyLogoUrl = 7;
+
+  Location location = 8;
+  string description = 9;
+  SalaryRange salaryRange = 10;
+  string employmentType = 11;
+  string experienceLevel = 12;
+  google.protobuf.Timestamp publicationDate = 13;
+  google.protobuf.Timestamp expirationDate = 14;
+  google.protobuf.Timestamp applicationDeadline = 15;
+  string contactEmail = 16;
+  repeated string requiredSkills = 17;
+  repeated string benefits = 18;
+  google.protobuf.Timestamp crawledAt = 19;
+  bool isActive = 20;
+  repeated string jobFunctions = 21;
+}
+
+message Location {
+  string city = 1;
+  string department = 2;
+  string country = 3;
+}
+
+message SalaryRange {
+  double min = 1;
+  double max = 2;
+  string currency = 3;
+  string text = 4;
+}

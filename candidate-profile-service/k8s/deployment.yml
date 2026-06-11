@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: candidate-profile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: candidate-profile
+  template:
+    metadata:
+      labels:
+        app: candidate-profile
+    spec:
+      containers:
+        - name: candidate-profile
+          image: candidate-profile:1.0
+          ports:
+            - containerPort: 8083
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

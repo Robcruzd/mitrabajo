@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-scraper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-scraper
+  template:
+    metadata:
+      labels:
+        app: job-scraper
+    spec:
+      containers:
+        - name: job-scraper
+          image: job-scraper:1.0
+          ports:
+            - containerPort: 9090
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
